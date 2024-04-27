@@ -46,7 +46,6 @@ class OrganizationUpdateView(UpdateView):
 
 class OrganizationDeleteView(DeleteView):
     model = Organization
-    form_class = OrganizationForm
     template_name = 'organization/org_del.html'
     success_url = reverse_lazy('organization-list')
 
@@ -83,7 +82,6 @@ class StudentUpdateView(UpdateView):
 
 class StudentDeleteView(DeleteView):
     model = Student
-    form_class = StudentForm
     template_name = 'student/stud_del.html'
     success_url = reverse_lazy('student-list')
 
@@ -118,7 +116,6 @@ class OrgMemberUpdateView(UpdateView):
 
 class OrgMemberDeleteView(DeleteView):
     model = OrgMember
-    form_class = OrgMemberForm
     template_name = 'org_member/orgmem_del.html'
     success_url = reverse_lazy('orgmem-list')
 
@@ -147,13 +144,11 @@ class CollegeCreateView(CreateView):
 
 class CollegeUpdateView(UpdateView):
     model = College
-    form_class = CollegeForm
     template_name = 'college/college_edit.html'
     success_url = reverse_lazy('college-list')
 
 class CollegeDeleteView(DeleteView):
     model = College
-    form_class = CollegeForm
     template_name = 'college/college_del.html'
     success_url = reverse_lazy('college-list')
 
@@ -188,6 +183,5 @@ class ProgramUpdateView(UpdateView):
 
 class ProgramDeleteView(DeleteView):
     model = Program
-    form_class = ProgramForm
     template_name = 'program/program_del.html'
     success_url = reverse_lazy('program-list')

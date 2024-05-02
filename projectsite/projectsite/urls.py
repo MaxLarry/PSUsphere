@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from studentorg.views import HomePageView, OrganizationList , OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, StudentList , StudentCreateView, StudentUpdateView, StudentDeleteView,OrgMemberList , OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, CollegeList , CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList , ProgramCreateView, ProgramUpdateView, ProgramDeleteView
+from studentorg.views import HomePageView, OrganizationList , OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, StudentList , StudentCreateView, StudentUpdateView, StudentDeleteView,OrgMemberList , OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, CollegeList , CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList , ProgramCreateView, ProgramUpdateView, ProgramDeleteView, ChartView, DoughStudCountbyCollege, PolarCountByProgram, DoughnutCountByCollege, PolarCountOrgmem, PolarCountstudYear
 from studentorg import views
 from django.contrib.auth import views as auth_views
 
@@ -51,5 +51,12 @@ urlpatterns = [
 
     re_path(r'^Login/$', auth_views.LoginView.as_view(template_name='login.html'), name= 'login'),
     re_path(r'^Login/$', auth_views.LogoutView.as_view(), name= 'logout'),
+
+    path('dashboard_chart', ChartView.as_view(), name='dashboard-chart'),
+    path('chart/', DoughStudCountbyCollege, name='chart'),
+    path('polar_chart/', PolarCountByProgram, name='chart'),
+    path('dough_chart/', DoughnutCountByCollege, name='chart'),
+    path('polar2_chart/', PolarCountOrgmem, name='chart'),
+    path('countyear_chart/', PolarCountstudYear, name='chart'),
 
 ]

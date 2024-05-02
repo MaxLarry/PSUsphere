@@ -11,6 +11,9 @@ from typing import Any
 from django.db.models.query import QuerySet
 from django.db.models import Q
 
+from django.db import connection
+from django.http import JsonResponse
+
 @method_decorator(login_required, name='dispatch')
 class HomePageView(ListView):
     model = Organization
@@ -185,3 +188,111 @@ class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'program/program_del.html'
     success_url = reverse_lazy('program-list')
+
+class ChartView(ListView):
+    template_name = 'chart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        pass
+
+def DoughStudCountbyCollege(request):
+    query = '''
+    SELECT studentorg_college.college_name, COUNT(studentorg_student.id) AS total_students
+    FROM studentorg_college
+    JOIN studentorg_program ON studentorg_college.id = studentorg_program.college_id
+    JOIN studentorg_student ON studentorg_program.id = studentorg_student.program_id
+    GROUP BY studentorg_college.college_name;
+
+    '''
+    data = {}
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        if rows:
+            data = {prog_name: count for prog_name, count in rows}
+        else:
+            data = {}
+
+    return JsonResponse(data)
+
+def PolarCountByProgram(request):
+    query = '''
+    SELECT TRIM(studentorg_program.prog_name) as program_name, COUNT(*) as count
+    FROM studentorg_student
+    JOIN studentorg_program ON studentorg_student.program_id = studentorg_program.id
+    GROUP BY TRIM(studentorg_program.prog_name);
+    '''
+    data = {}
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        if rows:
+            data = {prog_name: count for prog_name, count in rows}
+        else:
+            data = {}
+
+    return JsonResponse(data)
+
+def DoughnutCountByCollege(request):
+    query = '''
+    SELECT studentorg_college.college_name, COUNT(studentorg_organization.id) AS total_organizations
+    FROM studentorg_college
+    JOIN studentorg_organization ON studentorg_college.id = studentorg_organization.college_id
+    GROUP BY studentorg_college.college_name;
+    '''
+
+    data = {}
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        if rows:
+            data = {row[0]: row[1] for row in rows}
+        else:
+            data = {}
+
+    return JsonResponse(data)
+
+def PolarCountOrgmem(request):
+    query = '''
+        SELECT studentorg_organization.name, COUNT(studentorg_orgmember.id) AS total_members
+        FROM studentorg_organization
+        JOIN studentorg_orgmember ON studentorg_organization.id = studentorg_orgmember.organization_id
+        GROUP BY studentorg_organization.name;
+        '''
+
+    data = {}
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        if rows:
+            data = {row[0]: row[1] for row in rows}
+        else:
+            data = {}
+
+    return JsonResponse(data)
+
+def PolarCountstudYear(request):
+    query = '''
+        SELECT SUBSTR(student_id, 1, 4) AS enrollment_year, COUNT(id) AS total_students
+        FROM studentorg_student
+        GROUP BY enrollment_year;
+        '''
+    data = {}
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        if rows:
+            data = {row[0]: row[1] for row in rows}
+        else:
+            data = {}
+
+    return JsonResponse(data)

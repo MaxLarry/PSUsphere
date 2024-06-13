@@ -68,7 +68,8 @@ class StudentList(ListView):
             qs = qs.filter(Q(firstname__icontains=query) |
                         Q (lastname__icontains=query) | 
                         Q (middlename__icontains=query) |
-                        Q (student_id__icontains=query))
+                        Q (student_id__icontains=query)|
+                        Q (program__prog_name__icontains=query))
         return qs
 
 class StudentCreateView(CreateView):
@@ -147,6 +148,7 @@ class CollegeCreateView(CreateView):
 
 class CollegeUpdateView(UpdateView):
     model = College
+    form_class = CollegeForm
     template_name = 'college/college_edit.html'
     success_url = reverse_lazy('college-list')
 

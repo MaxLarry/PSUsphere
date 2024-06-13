@@ -14,6 +14,8 @@ class StudentForm(ModelForm):
         fields = "__all__"
 
 class OrgMemberForm(ModelForm):
+    date_joined = forms.DateField(label="date_joined",
+                                 widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
     class Meta:
         model = OrgMember
         fields = "__all__"
@@ -27,3 +29,4 @@ class ProgramForm(ModelForm):
     class Meta:
         model = Program
         fields = "__all__"
+
